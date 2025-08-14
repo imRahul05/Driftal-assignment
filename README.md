@@ -7,7 +7,7 @@ A modern, real-time interface monitoring dashboard for HR integrations built wit
 ConnexView is a web-based Interface Monitoring Dashboard designed to help users visualize the health and history of data replication interfaces between systems like SAP SuccessFactors and downstream applications (SAP ECP, 3rd party apps).
 
 
-## � Screenshots
+## 📸 Screenshots
 
 ### Dashboard Home View
 ![Dashboard Home View](./src/assets/home.png)
@@ -20,6 +20,12 @@ ConnexView is a web-based Interface Monitoring Dashboard designed to help users 
 
 ### Search Feature
 ![Search Feature](./src/assets/serachFeature.png)
+
+### Pagination
+![Pagination](./src/assets/pagination.png)
+
+### 404 - Unknown Routes
+![Unknown Routes](./src/assets/unknownRoutes.png)
 
 
 # ✨ Key Features
