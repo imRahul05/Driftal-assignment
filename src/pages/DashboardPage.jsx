@@ -29,7 +29,10 @@ const DashboardPage = () => {
   const fetchLogsData = async () => {
     setLoading(true);
     try {
-      const response = await apiService.getLogs(filters);
+      const response = await apiService.getLogs({
+        ...filters,
+        timeRange: timeRange
+      });
       setLogsData(response.logs);
       setPagination(response.pagination);
     } catch (error) {
@@ -43,6 +46,7 @@ const DashboardPage = () => {
 
   // Initial data fetch
   useEffect(() => {
+    console.log("Fetching data with timeRange:", timeRange);
     fetchLogsData();
   }, [timeRange, filters.page, filters.status, filters.interfaceName, filters.integrationKey, filters.sortBy, filters.sortOrder]);
 
@@ -60,6 +64,14 @@ const DashboardPage = () => {
   
   // Handle filter changes
   const handleFiltersChange = (newFilters) => {
+    // Handle time range selection from Filters component
+    if (newFilters.timeRange) {
+      setTimeRange(newFilters.timeRange);
+      // Remove timeRange from newFilters as it's managed separately
+      const { timeRange: _, ...restFilters } = newFilters;
+      newFilters = restFilters;
+    }
+    
     // Reset to first page when any filter changes except page
     if (Object.keys(newFilters).some(key => key !== 'page')) {
       setFilters(prev => ({ 
@@ -100,7 +112,10 @@ const DashboardPage = () => {
               <span className="text-sm text-gray-600">Time Range:</span>
               <select 
                 value={timeRange} 
-                onChange={(e) => setTimeRange(e.target.value)}
+                onChange={(e) => {
+                  setTimeRange(e.target.value);
+                  // This will trigger the useEffect and fetchLogsData
+                }}
                 className="px-3 py-1 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="Last 24 hours">Last 24 hours</option>

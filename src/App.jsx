@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import DashboardPage from './pages/DashboardPage';
+import AllRoute from './AllRoute.jsx';
 
 // Global styles
 const GlobalStyle = createGlobalStyle`
@@ -162,7 +162,8 @@ function App() {
     <ErrorBoundaryComponent>
       <GlobalStyle />
       <AppContainer>
-        <DashboardPage />
+        {/* Use the AllRoute component for routing */}
+        <AllRoute />
       </AppContainer>
     </ErrorBoundaryComponent>
   );

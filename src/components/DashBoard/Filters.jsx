@@ -70,7 +70,11 @@ const Filters = ({ filters, onFiltersChange, timeRange }) => {
     const presets = {
       'errors-only': { status: 'failed' },
       'recent-success': { status: 'success', sortBy: 'timestamp', sortOrder: 'desc' },
-      'high-volume': { sortBy: 'executionCount', sortOrder: 'desc' }
+      'high-volume': { sortBy: 'executionCount', sortOrder: 'desc' },
+      '24h': { timeRange: 'Last 24 hours' },
+      '7d': { timeRange: 'Last 7 days' },
+      '30d': { timeRange: 'Last 30 days' },
+      '90d': { timeRange: 'Last 90 days' }
     };
     
     if (presets[preset]) {
@@ -113,6 +117,55 @@ const Filters = ({ filters, onFiltersChange, timeRange }) => {
       <h3 className="text-xl font-semibold text-gray-800 mb-5 flex items-center gap-2">
         🔍 Filters
       </h3>
+
+      {/* Time Range Quick Filters */}
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-medium mb-2">
+          Time Range
+        </label>
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            onClick={() => applyPresetFilter('24h')}
+            className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              timeRange === 'Last 24 hours' 
+                ? 'bg-blue-100 border border-blue-300 text-blue-700' 
+                : 'bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            Last 24 Hours
+          </button>
+          <button
+            onClick={() => applyPresetFilter('7d')}
+            className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              timeRange === 'Last 7 days' 
+                ? 'bg-blue-100 border border-blue-300 text-blue-700' 
+                : 'bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            Last 7 Days
+          </button>
+          <button
+            onClick={() => applyPresetFilter('30d')}
+            className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              timeRange === 'Last 30 days' 
+                ? 'bg-blue-100 border border-blue-300 text-blue-700' 
+                : 'bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            Last 30 Days
+          </button>
+          <button
+            onClick={() => applyPresetFilter('90d')}
+            className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              timeRange === 'Last 90 days' 
+                ? 'bg-blue-100 border border-blue-300 text-blue-700' 
+                : 'bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            Last 90 Days
+          </button>
+        </div>
+      </div>
 
       {/* Active Filters */}
       {activeFilters.length > 0 && (

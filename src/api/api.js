@@ -80,10 +80,18 @@ class ApiService {
       const page = filters.page || 1;
       const limit = filters.limit || 10; // Changed default to 10 per page
       
+      // Convert UI-friendly time range to API timeRange format
+      let timeRange = filters.timeRange || '24h';
+      if (filters.timeRange === 'Last 24 hours') timeRange = '24h';
+      else if (filters.timeRange === 'Last 7 days') timeRange = '7d';
+      else if (filters.timeRange === 'Last 30 days') timeRange = '30d';
+      else if (filters.timeRange === 'Last 90 days') timeRange = '90d';
+      
       const response = await this.getInterfaceLogs({
         ...filters,
         page,
-        limit
+        limit,
+        timeRange
       });
       
       return {
@@ -114,6 +122,12 @@ class ApiService {
     sortBy = 'timestamp',
     sortOrder = 'desc'
   } = {}) {
+    // Convert UI-friendly time range to API timeRange format if it hasn't been converted already
+    if (timeRange === 'Last 24 hours') timeRange = '24h';
+    else if (timeRange === 'Last 7 days') timeRange = '7d';
+    else if (timeRange === 'Last 30 days') timeRange = '30d';
+    else if (timeRange === 'Last 90 days') timeRange = '90d';
+    
     const params = new URLSearchParams({
       page: page.toString(),
       limit: limit.toString(),
