@@ -38,13 +38,6 @@ const LogsTable = ({ data, filters, loading, onPageChange, pagination }) => {
     }));
   }, []);
 
-  // Handle status filter (display only - no actual filtering since filters are managed by parent)
-  const handleStatusFilter = useCallback((status) => {
-    // This could be used to show visual feedback but won't actually change filters
-    // since filters are managed by the parent DashboardPage component
-    console.log('Status filter clicked:', status);
-  }, []);
-
   // Format timestamp
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);
@@ -53,12 +46,6 @@ const LogsTable = ({ data, filters, loading, onPageChange, pagination }) => {
       time: date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
   };
-
-  // Get unique statuses for filter buttons
-  const uniqueStatuses = useMemo(() => {
-    if (!data || !Array.isArray(data)) return [];
-    return [...new Set(data.map(log => log.status))];
-  }, [data]);
 
   if (loading && !data) {
     return (
@@ -110,20 +97,6 @@ const LogsTable = ({ data, filters, loading, onPageChange, pagination }) => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 min-w-[200px]"
           />
-          
-          {uniqueStatuses.map(status => (
-            <button
-              key={status}
-              onClick={() => handleStatusFilter(status)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 border ${
-                filters?.status === status
-                  ? 'bg-blue-600 text-white border-blue-600'
-                  : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200'
-              }`}
-            >
-              {status.charAt(0).toUpperCase() + status.slice(1)}
-            </button>
-          ))}
         </div>
       </div>
 
@@ -209,15 +182,17 @@ const LogsTable = ({ data, filters, loading, onPageChange, pagination }) => {
                 
                 <div>
                   <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                    log.status === 'success' 
+                    log.status && log.status.toLowerCase() === 'success' 
                       ? 'bg-green-100 text-green-800' 
-                      : log.status === 'error' || log.status === 'failed'
+                      : log.status && (log.status.toLowerCase() === 'error' || log.status.toLowerCase() === 'failed')
                       ? 'bg-red-100 text-red-800'
-                      : log.status === 'warning'
+                      : log.status && log.status.toLowerCase() === 'warning'
                       ? 'bg-yellow-100 text-yellow-800'
                       : 'bg-gray-100 text-gray-800'
                   }`}>
-                    {log.status || 'unknown'}
+                    {log.status 
+                      ? log.status.charAt(0).toUpperCase() + log.status.slice(1).toLowerCase()
+                      : 'Unknown'}
                   </span>
                 </div>
                 

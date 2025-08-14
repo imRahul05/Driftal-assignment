@@ -2,7 +2,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import Home from '../components/DashBoard/Home';
 import LogsTable from '../components/DashBoard/LogsTable';
 import Filters from '../components/DashBoard/Filters';
-import Notifications from '../components/DashBoard/Notifications';
 import Loader from '../components/DashBoard/Loader';
 import { Filter, Bell, X, Menu, RefreshCw } from 'lucide-react';
 import apiService from '../api/api';
@@ -50,34 +49,44 @@ const DashboardPage = () => {
     fetchLogsData();
   }, [timeRange, filters.page, filters.status, filters.interfaceName, filters.integrationKey, filters.sortBy, filters.sortOrder]);
 
-  const handleRefresh = () => {
-    setRefreshing(true);
-    setLoading(true); // Show loader when refreshing
-    fetchLogsData().finally(() => {
+  const handleRefresh = async () => {
+    if (refreshing) return;
+    
+    try {
+      setRefreshing(true);
+      setLoading(true); 
+      
+      if (filters.page !== 1) {
+        setFilters(prev => ({ ...prev, page: 1 }));
+        return;
+      }
+      
+      await fetchLogsData();
+      
+      console.log("Data refreshed successfully");
+    } catch (error) {
+      console.error("Error refreshing data:", error);
+    } finally {
       setTimeout(() => {
         setRefreshing(false);
-      }, 1000);
-    });
+      }, 500);
+    }
   };
 
-  // We're removing the Home component as per the user's request
   
   // Handle filter changes
   const handleFiltersChange = (newFilters) => {
-    // Handle time range selection from Filters component
     if (newFilters.timeRange) {
       setTimeRange(newFilters.timeRange);
-      // Remove timeRange from newFilters as it's managed separately
       const { timeRange: _, ...restFilters } = newFilters;
       newFilters = restFilters;
     }
     
-    // Reset to first page when any filter changes except page
     if (Object.keys(newFilters).some(key => key !== 'page')) {
       setFilters(prev => ({ 
         ...prev, 
         ...newFilters,
-        page: 1 // Reset to first page on filter change
+        page: 1 
       }));
     } else {
       setFilters(prev => ({ ...prev, ...newFilters }));
@@ -89,7 +98,6 @@ const DashboardPage = () => {
     setFilters(prev => ({ ...prev, page }));
   };
 
-  // This will be used when loading is false
   const memoizedLogsTable = useMemo(() => 
     <LogsTable 
       filters={filters} 
@@ -114,7 +122,6 @@ const DashboardPage = () => {
                 value={timeRange} 
                 onChange={(e) => {
                   setTimeRange(e.target.value);
-                  // This will trigger the useEffect and fetchLogsData
                 }}
                 className="px-3 py-1 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
@@ -139,9 +146,10 @@ const DashboardPage = () => {
               <Filter size={16} />
               <span>Filters</span>
               {Object.keys(filters).length > 0 && (
-                <span className="bg-blue-500 text-white text-xs rounded-full px-2 py-0.5">
-                  {Object.keys(filters).length}
-                </span>
+                <></>
+                // <span className="bg-blue-500 text-white text-xs rounded-full px-2 py-0.5">
+                //   {Object.keys(filters).length}
+                // </span>
               )}
             </button>
 
@@ -150,9 +158,11 @@ const DashboardPage = () => {
             {/* Refresh Button */}
             <button
               onClick={handleRefresh}
-              disabled={refreshing}
+              disabled={refreshing || loading}
+              title="Refresh data"
+              aria-label="Refresh data"
               className={`px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
-                refreshing 
+                (refreshing || loading)
                   ? 'opacity-50 cursor-not-allowed' 
                   : 'hover:bg-blue-700 active:bg-blue-800'
               }`}
@@ -164,8 +174,8 @@ const DashboardPage = () => {
                 </>
               ) : (
                 <>
-                  <RefreshCw size={16} />
-                  <span>Refresh</span>
+                  <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
+                  <span>{loading ? "Loading..." : "Refresh"}</span>
                 </>
               )}
             </button>
@@ -216,9 +226,7 @@ const DashboardPage = () => {
                   <X size={20} className="text-gray-500" />
                 </button>
               </div>
-              {/* <div className="h-full overflow-y-auto pb-20">
-                <Notifications />
-              </div> */}
+           
             </aside>
           </>
         )}
