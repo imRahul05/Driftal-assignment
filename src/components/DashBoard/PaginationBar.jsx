@@ -9,7 +9,7 @@ const PaginationBar = ({ pagination, onPageChange }) => {
       <div className="text-center text-sm text-gray-600">
         Page {pagination.currentPage} of {pagination.totalPages} • Showing {pagination.limit} items per page • Total {pagination.totalCount} logs
       </div>
-      <div className="flex justify-center">
+      <div className="flex justify-center gap-2">
         <div className="flex items-center gap-4">
           <button
             onClick={() => onPageChange(1)}
@@ -35,7 +35,7 @@ const PaginationBar = ({ pagination, onPageChange }) => {
             &lt; Prev
           </button>
           
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {/* Page numbers */}
             {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
               // Calculate which page numbers to show
