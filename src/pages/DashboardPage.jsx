@@ -3,6 +3,7 @@ import Home from '../components/DashBoard/Home';
 import LogsTable from '../components/DashBoard/LogsTable';
 import Filters from '../components/DashBoard/Filters';
 import Notifications from '../components/DashBoard/Notifications';
+import Loader from '../components/DashBoard/Loader';
 import { Filter, Bell, X, Menu, RefreshCw } from 'lucide-react';
 import apiService from '../api/api';
 
@@ -47,8 +48,11 @@ const DashboardPage = () => {
 
   const handleRefresh = () => {
     setRefreshing(true);
+    setLoading(true); // Show loader when refreshing
     fetchLogsData().finally(() => {
-      setTimeout(() => setRefreshing(false), 1000);
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 1000);
     });
   };
 
@@ -73,6 +77,7 @@ const DashboardPage = () => {
     setFilters(prev => ({ ...prev, page }));
   };
 
+  // This will be used when loading is false
   const memoizedLogsTable = useMemo(() => 
     <LogsTable 
       filters={filters} 
@@ -157,10 +162,20 @@ const DashboardPage = () => {
         {/* Main Content */}
         <main className="flex-1">
           <div className="p-6">
-            {/* Logs Table */}
+            {/* Logs Table with Loader */}
             <div>
               <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
-                {memoizedLogsTable}
+                {loading ? (
+                  <Loader 
+                    type="spinner"
+                    size="medium"
+                    color="blue"
+                    message="Loading data..."
+                    subMessage="Please wait while we fetch your logs"
+                  />
+                ) : (
+                  memoizedLogsTable
+                )}
               </div>
             </div>
           </div>
