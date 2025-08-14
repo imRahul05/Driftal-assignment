@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
+import PaginationBar from './PaginationBar';
 
 const LogsTable = ({ data, filters, loading, onPageChange, pagination }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -126,18 +127,11 @@ const LogsTable = ({ data, filters, loading, onPageChange, pagination }) => {
         </div>
       </div>
 
-      {/* Results Count */}
-      <div className="mb-4 text-sm text-gray-600">
-        {pagination ? (
-          <>
-            Showing {((pagination.currentPage - 1) * pagination.limit) + 1} to {Math.min(pagination.currentPage * pagination.limit, pagination.totalCount)} of {pagination.totalCount} logs
-          </>
-        ) : (
-          <>
-            Showing {processedData.logs.length} of {data.length} logs
-          </>
-        )}
-      </div>
+      {!pagination && (
+        <div className="mb-4 text-sm text-gray-600">
+          Showing {processedData.logs.length} of {data.length} logs
+        </div>
+      )}
 
       {/* Table */}
       <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
@@ -295,94 +289,7 @@ const LogsTable = ({ data, filters, loading, onPageChange, pagination }) => {
       </div>
 
       {/* Pagination */}
-      {pagination && (
-        <div className="mt-6 flex justify-center">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => onPageChange(1)}
-              disabled={pagination.currentPage <= 1}
-              className={`px-3 py-1 rounded border ${
-                pagination.currentPage <= 1
-                  ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                  : 'bg-white text-blue-600 border-gray-300 hover:bg-blue-50'
-              }`}
-            >
-              &laquo; First
-            </button>
-            
-            <button
-              onClick={() => onPageChange(pagination.currentPage - 1)}
-              disabled={pagination.currentPage <= 1}
-              className={`px-3 py-1 rounded border ${
-                pagination.currentPage <= 1
-                  ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                  : 'bg-white text-blue-600 border-gray-300 hover:bg-blue-50'
-              }`}
-            >
-              &lt; Prev
-            </button>
-            
-            <div className="flex items-center">
-              {/* Page numbers */}
-              {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
-                // Calculate which page numbers to show
-                let pageNum;
-                if (pagination.totalPages <= 5) {
-                  // Show all pages if 5 or fewer
-                  pageNum = i + 1;
-                } else if (pagination.currentPage <= 3) {
-                  // Near the start
-                  pageNum = i + 1;
-                } else if (pagination.currentPage >= pagination.totalPages - 2) {
-                  // Near the end
-                  pageNum = pagination.totalPages - 4 + i;
-                } else {
-                  // In the middle
-                  pageNum = pagination.currentPage - 2 + i;
-                }
-                
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => onPageChange(pageNum)}
-                    className={`w-8 h-8 flex items-center justify-center rounded border ${
-                      pagination.currentPage === pageNum
-                        ? 'bg-blue-600 text-white border-blue-600'
-                        : 'bg-white text-gray-700 border-gray-300 hover:bg-blue-50'
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              })}
-            </div>
-            
-            <button
-              onClick={() => onPageChange(pagination.currentPage + 1)}
-              disabled={!pagination.hasNextPage}
-              className={`px-3 py-1 rounded border ${
-                !pagination.hasNextPage
-                  ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                  : 'bg-white text-blue-600 border-gray-300 hover:bg-blue-50'
-              }`}
-            >
-              Next &gt;
-            </button>
-            
-            <button
-              onClick={() => onPageChange(pagination.totalPages)}
-              disabled={!pagination.hasNextPage}
-              className={`px-3 py-1 rounded border ${
-                !pagination.hasNextPage
-                  ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                  : 'bg-white text-blue-600 border-gray-300 hover:bg-blue-50'
-              }`}
-            >
-              Last &raquo;
-            </button>
-          </div>
-        </div>
-      )}
+      {pagination && <PaginationBar pagination={pagination} onPageChange={onPageChange} />}
     </div>
   );
 };

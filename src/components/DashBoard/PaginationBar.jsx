@@ -41,7 +41,6 @@ const PaginationBar = ({ pagination, onPageChange }) => {
               // Calculate which page numbers to show
               let pageNum;
               if (pagination.totalPages <= 5) {
-                // Show all pages if 5 or fewer
                 pageNum = i + 1;
               } else if (pagination.currentPage <= 3) {
                 // Near the start

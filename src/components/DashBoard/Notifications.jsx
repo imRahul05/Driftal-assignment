@@ -268,7 +268,6 @@ const Notifications = ({ notifications = [], onDismiss }) => {
         )}
       </div>
 
-      {/* Custom scrollbar styles are handled by Tailwind's scrollbar utilities if you have the plugin */}
       <style jsx>{`
         .overflow-y-auto::-webkit-scrollbar {
           width: 6px;
