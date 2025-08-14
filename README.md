@@ -15,13 +15,25 @@ A modern, real-time interface monitoring dashboard for HR integrations built wit
 
 ConnexView is a web-based Interface Monitoring Dashboard designed to help users visualize the health and history of data replication interfaces between systems like SAP SuccessFactors and downstream applications (SAP ECP, 3rd party apps).
 
-## ✨ Key Features
 
-### 📊 Homepage Dashboard (Summary View)
-- **Metrics Display**: Success vs. failure counts with visual indicators
-- **Time Range Filters**: Last Hour, 24 Hours, Week, Month, Custom date range
-- **Trend Visualization**: Charts showing interface execution trends
-- **System Status**: Real-time health indicators
+## � Screenshots
+
+### Dashboard Home View
+![Dashboard Home View](./src/assets/home.png)
+
+### Filter Options
+![Filter Options](./src/assets/filter.png)
+
+### Time Filtering
+![Time Filtering](./src/assets/timefilter.png)
+
+### Search Feature
+![Search Feature](./src/assets/serachFeature.png)
+
+
+# ✨ Key Features
+
+
 
 ### 📋 Live Interface Logs Table
 - **Comprehensive Fields**: Interface Name, Integration Key, Status, Message, Timestamp
@@ -35,12 +47,6 @@ ConnexView is a web-based Interface Monitoring Dashboard designed to help users 
 - **Preset Filters**: Quick access to common filter combinations
 - **Filter Chips**: Visual representation of active filters
 - **Time-based Controls**: Flexible time range selection
-
-### 🔔 Real-time Notifications
-- **Alert System**: Error, warning, success, and info notifications
-- **Categorized Filtering**: Filter notifications by type
-- **Auto-dismiss**: Configurable notification timeout
-- **Action Buttons**: Quick actions for notification handling
 
 ## 🛠️ Technical Architecture
 
@@ -81,19 +87,6 @@ src/
 - **Retry Logic**: Automatic retry for failed requests
 - **Performance Monitoring**: Request timing and metrics
 
-### UI/UX Design Principles
-
-#### 🎨 Visual Design
-- **Glassmorphism**: Modern frosted glass effect with backdrop blur
-- **Gradient Backgrounds**: Dynamic color schemes
-- **Responsive Grid**: Flexible layout for all screen sizes
-- **Dark Theme**: Professional dark interface optimized for monitoring
-
-#### ⚡ User Experience
-- **Real-time Updates**: Auto-refresh every 30 seconds
-- **Loading States**: Progressive loading with skeletons
-- **Error Recovery**: Graceful error handling with retry options
-- **Accessibility**: Focus management and keyboard navigation
 
 ## 🔧 Setup Instructions
 
@@ -164,21 +157,8 @@ Response: {
 }
 ```
 
-### Performance Requirements
-- **Scalability**: Handles 500,000+ interface records
-- **Response Time**: < 2 seconds for filtered queries
-- **Pagination**: Efficient offset/cursor-based pagination
-- **Caching**: Redis/in-memory caching for frequently accessed data
 
-## 📈 Performance Features
 
-### Optimization Strategies
-- **Component Memoization**: React.memo and useMemo for performance
-- **API Caching**: Built-in request caching with TTL
-- **Lazy Loading**: Code splitting and dynamic imports
-- **Virtual Scrolling Ready**: Prepared for large dataset handling
-
-## 🚀 Deployment
 
 ### Build Optimization
 ```bash
@@ -186,10 +166,7 @@ Response: {
 npm run build
 ```
 
-### Deployment Targets
-- **Vercel**: Zero-config deployment
-- **Netlify**: JAMstack optimized
-- **AWS S3 + CloudFront**: Enterprise-grade CDN
+
 
 ## 🤝 Contributing
 
@@ -199,14 +176,7 @@ npm run build
 3. Submit pull request
 4. Code review and merge
 
-## 📝 Future Enhancements
 
-- **WebSocket Integration**: Real-time updates without polling
-- **Chart Library**: Interactive data visualizations
-- **Export Functionality**: CSV/PDF report generation
-- **Mobile Responsive**: Enhanced mobile experience
-
----
 
 **Live Demo**: [ConnexView Dashboard](http://localhost:5173)  
 **Challenge**: Interface Monitoring Dashboard for HR Integrations
