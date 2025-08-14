@@ -47,7 +47,6 @@ export const rateLimiter = (windowMs = 60000, maxRequests = 100) => {
     const requestLog = requests.get(ip);
     const windowStart = now - windowMs;
     
-    // Remove old requests outside the window
     const recentRequests = requestLog.filter(timestamp => timestamp > windowStart);
     
     if (recentRequests.length >= maxRequests) {
