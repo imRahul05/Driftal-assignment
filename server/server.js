@@ -1,7 +1,8 @@
 import express from "express";
 import { configDotenv } from "dotenv";
 import connectedToDB from "./config/db.js";
-
+import os from "os";
+import v8 from "v8";
 // Routes
 import dashboardRoutes from './Routes/dashboardRoutes.js';
 import interfaceRoutes from './Routes/interfaceRoutes.js';
@@ -39,15 +40,64 @@ app.get("/", (req, res) => {
   });
 });
 
+
+//test endpoint helper function for time
+function formatDuration(seconds) {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  return `${h}h ${m}m ${s}s`;
+}
+
+// helper: bytes -> MB
+function formatMB(bytes) {
+  return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+}
 // Test
 app.get("/test", (req, res) => {
+  const processUptime = process.uptime();
+  const systemUptime = os.uptime();
+
   res.status(200).json({
     message: "Server is working",
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    timestamp: {
+      iso: new Date().toISOString(),
+      local: new Date().toLocaleString()
+    },
+    process: {
+      pid: process.pid,
+      nodeVersion: process.version,
+      uptime: {
+        seconds: processUptime,
+        readable: formatDuration(processUptime)
+      },
+      cpuUsage: process.cpuUsage(),
+      memoryUsage: Object.fromEntries(
+        Object.entries(process.memoryUsage()).map(([k, v]) => [k, formatMB(v)])
+      ),
+      heapStats: {
+        totalHeapSize: formatMB(v8.getHeapStatistics().total_heap_size),
+        usedHeapSize: formatMB(v8.getHeapStatistics().used_heap_size),
+        heapSizeLimit: formatMB(v8.getHeapStatistics().heap_size_limit)
+      }
+    },
+    system: {
+      platform: process.platform,
+      arch: process.arch,
+      uptime: {
+        seconds: systemUptime,
+        readable: formatDuration(systemUptime)
+      },
+      loadAverage: os.loadavg(),
+      totalMem: formatMB(os.totalmem()),
+      freeMem: formatMB(os.freemem())
+    },
+    network: {
+      hostname: os.hostname(),
+      interfaces: os.networkInterfaces()
+    }
   });
 });
-
 // Seed data (manual only)
 app.post("/api/seed-data", async (req, res) => {
   try {
